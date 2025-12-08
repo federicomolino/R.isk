@@ -1,0 +1,73 @@
+package com.Risk.Controller;
+
+import com.Risk.DTO.PrenotazioneDTO;
+import com.Risk.DTO.TipologiaPrenotazione;
+import com.Risk.Service.PrenotazioneService;
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
+import java.util.Properties;
+
+@Controller
+@RequestMapping("/nuova/Prenotazione")
+public class PrenotazioneController {
+
+    private PrenotazioneService prenotazioneService;
+    private Properties serviziDescrizioneProperties;
+
+    public PrenotazioneController(PrenotazioneService prenotazioneService){
+        this.prenotazioneService = prenotazioneService;
+
+        serviziDescrizioneProperties = new Properties();
+        try {
+            //Carica il file
+            serviziDescrizioneProperties.load(getClass().getResourceAsStream("/DescrizioneServizi.properties"));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping
+    public String GetNuovaPrenotazione(@RequestParam("tipo") String tipo, Model model){
+        if(tipo != null || !tipo.isEmpty()){
+            String descrizione = serviziDescrizioneProperties.getProperty(tipo + ".descrizione");
+            String titolo = serviziDescrizioneProperties.getProperty(tipo + ".titolo");
+            model.addAttribute("titolo",titolo);
+            model.addAttribute("descrizione",descrizione);
+        }
+        model.addAttribute("tipologiaPrenotazione", TipologiaPrenotazione.values());
+        model.addAttribute("formNuovaPrenotazione", new PrenotazioneDTO());
+        return "Prenotazione/Prenotazione";
+    }
+
+    @PostMapping
+    public String SalvaPrenotazione(@Valid @ModelAttribute("formNuovaPrenotazione") PrenotazioneDTO prenotazioneDTO,
+                                    BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
+        if (bindingResult.hasErrors()){
+            model.addAttribute("tipologiaPrenotazione", TipologiaPrenotazione.values());
+            return "Prenotazione/Prenotazione";
+        }
+        try{
+            if (prenotazioneService.CreaNuovaPrenotazione(prenotazioneDTO)){
+                model.addAttribute("tipologiaPrenotazione", TipologiaPrenotazione.values());
+                model.addAttribute("successMessage",
+                        "Prenotazione Creata Correttamente");
+                return "Prenotazione/Prenotazione";
+            }
+        }catch (Exception e){
+            model.addAttribute("tipologiaPrenotazione", TipologiaPrenotazione.values());
+            model.addAttribute("errorMessage",
+                    "Errore durante il tentativo di Prenotazione");
+            return "Prenotazione/Prenotazione";
+        }
+        model.addAttribute("errorMessage",
+                "Errore durante il tentativo di Prenotazione");
+        model.addAttribute("tipologiaPrenotazione", TipologiaPrenotazione.values());
+        return "Prenotazione/Prenotazione";
+    }
+}

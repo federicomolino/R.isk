@@ -1,0 +1,5 @@
+.box-desc {
+  height: 350px;/* altezza fissa (modifica a piacere) */
+  width: 600px;
+  overflow: auto;/* scrollbar se il testo è troppo lungo */
+}

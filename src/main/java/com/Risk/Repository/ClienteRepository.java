@@ -1,0 +1,7 @@
+package com.Risk.Repository;
+
+import com.Risk.Entity.Cliente;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ClienteRepository extends JpaRepository<Cliente,Integer> {
+}
