@@ -11,7 +11,7 @@
 <body>
 <!--importo navbar-->
 <div th:replace="~{navbar/navbar :: navbar}"></div>
-<div class="container mt-4">
+  <div class="container mt-4">
   <!--Message-->
   <div class="d-flex justify-content-center">
     <div th:if="${errorMessage}" class="alert alert-danger d-flex justify-content-between mt-2 mx-auto">
@@ -25,7 +25,7 @@
   </div>
   <div class="row g-4"><!--d-flex justify-content-between-->
     <form method="post" th:object="${formNuovaPrenotazione}" th:action="@{/nuova/Prenotazione}"
-          th:class="${descrizione} != null ? 'col-6' : 'col-8 mx-auto'">
+          th:class="${descrizione} != null ? 'col-12 col-md-6' : 'col-8 mx-auto'">
       <div class="border rounded-2 p-3 position-relative">
         <!-- Titolo centrato nel bordo -->
         <div class="position-absolute top-0 start-50 translate-middle bg-white px-3" style="transform: translate(-50%, -50%);">
@@ -70,7 +70,8 @@
           </div>
           <div class="col-12 col-md-6">
             <label class="form-label">Telefono<span class="text-danger">*</span></label>
-            <input type="number" class="form-control form-control-sm" th:field="*{Telefono}">
+            <input type="text" class="form-control form-control-sm"
+                   th:field="*{Telefono}" placeholder="Inserisci il tuo numero" id="NumeroTelefono">
             <span th:if="${#fields.hasErrors('Telefono')}"
                   th:text="${#fields.errors('Telefono')[0]}"
                   class="text-danger">
@@ -113,5 +114,6 @@
 </div>
 <div th:replace="~{navbar/footer :: footer}"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src ="/Script/VerificaNumero.js"></script>
 </body>
 </html>

@@ -1,36 +1,54 @@
+/* Sfondo navbar */
 .bg-nav {
     background-color: rgb(179, 31, 47);
 }
 
-.navbar {
-    min-height: 60px; /* blocca altezza minima */
+/* Navbar brand (logo o testo) */
+.navbar-brand {
+    display: flex;
+    align-items: center; /* centra testo verticalmente */
+    font-weight: bold;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: white !important;
 }
 
+/* Navbar links */
 .navbar-nav .nav-link i {
     color: white;
 }
-.navbar-brand {
-    color: white !important;
-    font-weight: bold;
+
+/* Pulsante "Chi siamo" */
+.btn-navbar {
+    background: none;
+    border: none;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    color: white;
     display: flex;
-    align-items: center; /* centra verticalmente logo e testo */
-    gap: 10px;           /* spazio tra logo e testo */
+    align-items: center;
+    cursor: pointer;
 }
 
+.btn-navbar:hover {
+    text-decoration: underline;
+}
+
+/* Logo (se usi un'immagine) */
 .logo-navbar {
     height: 40px;
     width: auto;
-}
-
-/* Stile per pulsante navbar simile ai link */
-.btn-navbar {
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    display: flex;
+    margin-right: 10px;
 }
 
 @media (max-width: 768px) {
     .logo-navbar {
         height: 30px;
     }
+}
+
+/* Navbar padding compatibile con burger */
+.navbar {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }

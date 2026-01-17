@@ -35,7 +35,7 @@ public class PrenotazioneService {
             cliente.setNome(prenotazioneDTO.getNome());
             cliente.setCognome(prenotazioneDTO.getCognome());
             cliente.setEmail(prenotazioneDTO.getEmail());
-            cliente.setTelefono(prenotazioneDTO.getTelefono());
+            cliente.setTelefono(Long.parseLong(prenotazioneDTO.getTelefono()));
             clienteRepository.save(cliente);
 
             Prenotazione prenotazione = new Prenotazione();
