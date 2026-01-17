@@ -41,33 +41,59 @@ public class PrenotazioneController {
             model.addAttribute("descrizione",descrizione);
         }
         model.addAttribute("tipologiaPrenotazione", TipologiaPrenotazione.values());
-        model.addAttribute("formNuovaPrenotazione", new PrenotazioneDTO());
+        PrenotazioneDTO dto = new PrenotazioneDTO();
+        dto.setTipo(tipo);
+        model.addAttribute("formNuovaPrenotazione", dto);
         return "Prenotazione/Prenotazione";
     }
 
     @PostMapping
-    public String SalvaPrenotazione(@Valid @ModelAttribute("formNuovaPrenotazione") PrenotazioneDTO prenotazioneDTO,
-                                    BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
-        if (bindingResult.hasErrors()){
-            model.addAttribute("tipologiaPrenotazione", TipologiaPrenotazione.values());
-            return "Prenotazione/Prenotazione";
-        }
-        try{
-            if (prenotazioneService.CreaNuovaPrenotazione(prenotazioneDTO)){
-                model.addAttribute("tipologiaPrenotazione", TipologiaPrenotazione.values());
-                model.addAttribute("successMessage",
-                        "Prenotazione Creata Correttamente");
-                return "Prenotazione/Prenotazione";
-            }
-        }catch (Exception e){
-            model.addAttribute("tipologiaPrenotazione", TipologiaPrenotazione.values());
-            model.addAttribute("errorMessage",
-                    "Errore durante il tentativo di Prenotazione");
-            return "Prenotazione/Prenotazione";
-        }
-        model.addAttribute("errorMessage",
-                "Errore durante il tentativo di Prenotazione");
+    public String SalvaPrenotazione(
+            @Valid @ModelAttribute("formNuovaPrenotazione") PrenotazioneDTO prenotazioneDTO,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(value = "Tipo", required = false) String tipo) {
+
+        // Aggiungo sempre le tipologie al model (serve se si ritorna alla view senza redirect)
         model.addAttribute("tipologiaPrenotazione", TipologiaPrenotazione.values());
-        return "Prenotazione/Prenotazione";
+
+        // Se ci sono errori di validazione, rimango nella stessa view
+        if (bindingResult.hasErrors()) {
+            return "Prenotazione/Prenotazione";
+        }
+
+        try {
+            boolean successo = prenotazioneService.CreaNuovaPrenotazione(prenotazioneDTO);
+
+            if (successo) {
+                // Messaggio di successo tramite Flash Attributes per redirect
+                redirectAttributes.addFlashAttribute("successMessage", "Prenotazione Creata Correttamente");
+
+                if (tipo == null) {
+                    return "Prenotazione/Prenotazione";
+                } else {
+                    return "redirect:/nuova/Prenotazione?tipo=" + tipo;
+                }
+            }
+        } catch (Exception e) {
+            // Messaggio di errore tramite Flash Attributes per redirect
+            redirectAttributes.addFlashAttribute("errorMessage", "Errore durante il tentativo di Prenotazione");
+
+            if (tipo == null) {
+                return "Prenotazione/Prenotazione";
+            } else {
+                return "redirect:/nuova/Prenotazione?tipo=" + tipo;
+            }
+        }
+
+        // Fallback generale se prenotazioneService non ritorna true ma senza eccezioni
+        redirectAttributes.addFlashAttribute("errorMessage", "Errore durante il tentativo di Prenotazione");
+
+        if (tipo == null) {
+            return "Prenotazione/Prenotazione";
+        } else {
+            return "redirect:/nuova/Prenotazione?tipo=" + tipo;
+        }
     }
 }

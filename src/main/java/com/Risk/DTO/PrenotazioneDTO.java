@@ -23,6 +23,16 @@ public class PrenotazioneDTO {
     @Size(max = 255, message = "Il valore massimo consentito è di 255 caratteri")
     private String Note;
 
+    private String Tipo;
+
+    public String getTipo() {
+        return Tipo;
+    }
+
+    public void setTipo(String tipo) {
+        Tipo = tipo;
+    }
+
     public String getNome() {
         return Nome;
     }
