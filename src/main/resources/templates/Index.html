@@ -9,13 +9,22 @@
     <link rel="stylesheet" href="/ServiziCard/serviceCard.css">
     <style>
         .hero {
-            background: url('https://eurekaevolution.it/wp-content/uploads/2021/05/climatizzatori.jpg') center/cover no-repeat; /* immagine hero */
             height: 500px;
             display: flex;
-            justify-content: start;
-            align-items: center;
+            justify-content: center; /* centra orizzontalmente */
+            align-items: center; /* centra verticalmente */
             color: white;
             text-shadow: 5px 2px 6px rgba(0,0,0,0.8);
+        }
+
+        .hero-container{
+            height : 500px;
+        }
+
+        .hero-logo {
+            max-height: 380px; /* limitiamo l'altezza del logo */
+            width: auto;       /* manteniamo le proporzioni */
+            display: block;    /* elimina eventuali spazi indesiderati sotto l'immagine */
         }
 
         .hero h1 {
@@ -28,7 +37,9 @@
 <div th:replace="~{navbar/navbar :: navbar}"></div>
 <div>
     <section class="hero">
-        <!--Immagine nella classe-->
+        <div class="hero-container">
+            <img th:src="${img['img_logo']}" class="hero-logo">
+        </div>
     </section>
 
     <section class="services">

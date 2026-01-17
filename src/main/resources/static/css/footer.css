@@ -1,16 +1,31 @@
-html, body {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
 footer {
-    background-color: rgb(54, 53, 58);
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    position: fixed;
+    position: fixed;       /* sempre in basso */
     bottom: 0;
     left: 0;
     width: 100%;
+    background-color: rgb(54, 53, 58);
+    color: white;
+    padding: 12px 20px;    /* altezza media, più leggibile */
+    display: flex;         /* layout orizzontale */
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;       /* leggibile ma compatto */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.3);
+    flex-wrap: wrap;       /* su schermi piccoli va su più righe */
+    min-height: 40px;      /* garantisce altezza minima */
+}
+
+footer div {
+    display: flex;
+    flex-direction: row;   /* i dati azienda in riga */
+    gap: 20px;             /* spazio tra le info */
+}
+
+footer a {
+    color: white;           /* mantiene il colore bianco */
+    text-decoration: underline; /* opzionale: sottolineato */
+}
+
+footer a:hover {
+    color: #ddd;            /* leggero cambio colore al passaggio */
 }

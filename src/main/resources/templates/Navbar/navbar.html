@@ -9,7 +9,8 @@
 <div th:fragment="navbar">
     <nav class="navbar navbar-expand-lg bg-nav">
         <div class="container">
-            <a class="navbar-brand" href="/">R.ISK</a>
+            <a class="navbar-brand" href="/"><img th:src="${img['img_logo']}" class="logo-navbar">R.ISK</a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -28,7 +29,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="btn nav-link text-white" data-bs-toggle="modal"
+                        <button type="button" class="btn text-white btn-navbar" data-bs-toggle="modal"
                                 data-bs-target="#staticBackdrop">
                             <i class="bi bi-person-raised-hand">&nbsp;Chi siamo</i>
                         </button>

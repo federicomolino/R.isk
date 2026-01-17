@@ -1,9 +1,6 @@
 package com.Risk.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Immagine {
@@ -15,6 +12,17 @@ public class Immagine {
     private String codiceFoto;
 
     private String pathFoto;
+
+    @Lob
+    private byte[] pathImmagineDirette;
+
+    public byte[] getPathImmagineDirette() {
+        return pathImmagineDirette;
+    }
+
+    public void setPathImmagineDirette(byte[] pathImmagineDirette) {
+        this.pathImmagineDirette = pathImmagineDirette;
+    }
 
     public int getIdImmagine() {
         return idImmagine;

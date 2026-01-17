@@ -3,3 +3,69 @@
   width: 600px;
   overflow: auto;/* scrollbar se il testo è troppo lungo */
 }
+
+/* Contenitore principale */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+/* Form e box descrizione */
+form, .box-desc {
+    width: 100%;
+}
+
+/* Su desktop: form e box descrizione affiancati */
+@media (min-width: 992px) {
+    .row.g-4 {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    form {
+        flex: 0 0 48%; /* circa metà larghezza */
+    }
+    .box-desc {
+        flex: 0 0 48%; /* circa metà larghezza */
+    }
+}
+
+/* Su tablet: tutto piena larghezza con margine */
+@media (max-width: 991px) and (min-width: 768px) {
+    form, .box-desc {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+/* Su mobile: form e box descrizione in colonna, padding interno ottimizzato */
+@media (max-width: 767px) {
+    form, .box-desc {
+        width: 100%;
+        padding: 10px;
+    }
+    .border.rounded-2.p-3.position-relative {
+        padding: 10px;
+    }
+    .position-absolute.top-0.start-50.translate-middle {
+        padding: 5px 10px;
+    }
+    button.btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+/* Alert messaggi centrati e responsivi */
+.alert {
+    max-width: 100%;
+    width: auto;
+    margin: 10px 0;
+    word-wrap: break-word;
+}
+
+/* Box descrizione testo */
+.box-desc p {
+    word-wrap: break-word;
+}
