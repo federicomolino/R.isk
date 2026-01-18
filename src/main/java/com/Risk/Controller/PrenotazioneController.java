@@ -2,8 +2,10 @@ package com.Risk.Controller;
 
 import com.Risk.DTO.PrenotazioneDTO;
 import com.Risk.DTO.TipologiaPrenotazione;
+import com.Risk.Service.EmailService;
 import com.Risk.Service.PrenotazioneService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,9 +21,12 @@ public class PrenotazioneController {
 
     private PrenotazioneService prenotazioneService;
     private Properties serviziDescrizioneProperties;
+    private EmailService emailService;
 
-    public PrenotazioneController(PrenotazioneService prenotazioneService){
+    @Autowired
+    public PrenotazioneController(PrenotazioneService prenotazioneService, EmailService emailService){
         this.prenotazioneService = prenotazioneService;
+        this.emailService = emailService;
 
         serviziDescrizioneProperties = new Properties();
         try {
@@ -33,7 +38,7 @@ public class PrenotazioneController {
     }
 
     @GetMapping
-    public String GetNuovaPrenotazione(@RequestParam("tipo") String tipo, Model model){
+    public String getNuovaPrenotazione(@RequestParam("tipo") String tipo, Model model){
         if(tipo != null || !tipo.isEmpty()){
             String descrizione = serviziDescrizioneProperties.getProperty(tipo + ".descrizione");
             String titolo = serviziDescrizioneProperties.getProperty(tipo + ".titolo");
@@ -48,7 +53,7 @@ public class PrenotazioneController {
     }
 
     @PostMapping
-    public String SalvaPrenotazione(
+    public String salvaPrenotazione(
             @Valid @ModelAttribute("formNuovaPrenotazione") PrenotazioneDTO prenotazioneDTO,
             BindingResult bindingResult,
             Model model,
@@ -64,11 +69,18 @@ public class PrenotazioneController {
         }
 
         try {
-            boolean successo = prenotazioneService.CreaNuovaPrenotazione(prenotazioneDTO);
+            boolean successo = prenotazioneService.creaNuovaPrenotazione(prenotazioneDTO);
 
             if (successo) {
-                // Messaggio di successo tramite Flash Attributes per redirect
                 redirectAttributes.addFlashAttribute("successMessage", "Prenotazione Creata Correttamente");
+                //Invia mail per la prenotazione avventa
+                try {
+                    emailService.sendEmail(tipo, prenotazioneDTO);
+                }catch (Exception e){
+                    redirectAttributes.addFlashAttribute("successMessage",
+                            "Errore durante l'invio della mail per la prenotazione, verrà contattata " +
+                                    "telefonicamente");
+                }
 
                 if (tipo == null) {
                     return "Prenotazione/Prenotazione";
@@ -77,7 +89,6 @@ public class PrenotazioneController {
                 }
             }
         } catch (Exception e) {
-            // Messaggio di errore tramite Flash Attributes per redirect
             redirectAttributes.addFlashAttribute("errorMessage", "Errore durante il tentativo di Prenotazione");
 
             if (tipo == null) {

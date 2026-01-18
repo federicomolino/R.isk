@@ -30,14 +30,14 @@ public class GlobalModelAttributes {
         //Salvo l'array di byte se presente
         for (Immagine i : img) {
             if (i.getPathFoto() == null && i.getPathImmagineDirette() == null) {
-                indexService.RecuperaImmagine(i.getIdImmagine());
+                indexService.recuperaImmagine(i.getIdImmagine());
             }
         }
 
         //Salvo in base64 se presente
         for (Immagine i : img) {
             if (i.getPathImmagineDirette() != null) {
-                String base64Img = indexService.ConvertiInBase64(i.getPathImmagineDirette());
+                String base64Img = indexService.convertiInBase64(i.getPathImmagineDirette());
                 imgMap.put("img_logo", "data:image/jpeg;base64," + base64Img);
             }
         }

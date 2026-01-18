@@ -20,7 +20,7 @@ public class IndexService {
         this.immagineRepository = immagineRepository;
     }
 
-    public void RecuperaImmagine(int idImmagine) throws IOException {
+    public void recuperaImmagine(int idImmagine) throws IOException {
 
         Immagine rImg = immagineRepository.findById(idImmagine).get();
         String immagine = rImg.getCodiceFoto();
@@ -37,7 +37,7 @@ public class IndexService {
         }
     }
 
-    public String ConvertiInBase64(byte [] img){
+    public String convertiInBase64(byte [] img){
         String base64Img = Base64.getEncoder().encodeToString(img);
         return base64Img;
     }

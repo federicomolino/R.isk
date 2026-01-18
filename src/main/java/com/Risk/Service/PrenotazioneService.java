@@ -25,7 +25,7 @@ public class PrenotazioneService {
     }
 
     @Transactional
-    public boolean CreaNuovaPrenotazione(PrenotazioneDTO prenotazioneDTO){
+    public boolean creaNuovaPrenotazione(PrenotazioneDTO prenotazioneDTO){
         if (prenotazioneDTO == null){
             throw new IllegalArgumentException();
         }
