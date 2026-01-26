@@ -23,6 +23,8 @@ public class Prenotazione {
     @Size(max = 255, message = "Nota Inserita troppo lunga")
     private String Note;
 
+    private boolean isMailInviata;
+
     @ManyToOne
     @JoinColumn(name = "id_Cliente")
     private Cliente cliente;
@@ -65,5 +67,13 @@ public class Prenotazione {
 
     public void setNote(String note) {
         Note = note;
+    }
+    
+    public boolean isMailInviata() {
+        return isMailInviata;
+    }
+
+    public void setMailInviata(boolean mailInviata) {
+        isMailInviata = mailInviata;
     }
 }

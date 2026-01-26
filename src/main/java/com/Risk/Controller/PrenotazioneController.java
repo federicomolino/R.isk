@@ -6,6 +6,7 @@ import com.Risk.Service.EmailService;
 import com.Risk.Service.PrenotazioneService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,7 +40,8 @@ public class PrenotazioneController {
 
     @GetMapping
     public String getNuovaPrenotazione(@RequestParam("tipo") String tipo, Model model){
-        if(tipo != null || !tipo.isEmpty()){
+
+        if(tipo != null && !tipo.isEmpty()){
             String descrizione = serviziDescrizioneProperties.getProperty(tipo + ".descrizione");
             String titolo = serviziDescrizioneProperties.getProperty(tipo + ".titolo");
             model.addAttribute("titolo",titolo);
@@ -69,42 +71,20 @@ public class PrenotazioneController {
         }
 
         try {
-            boolean successo = prenotazioneService.creaNuovaPrenotazione(prenotazioneDTO);
-
-            if (successo) {
-                redirectAttributes.addFlashAttribute("successMessage", "Prenotazione Creata Correttamente");
-                //Invia mail per la prenotazione avventa
-                try {
-                    emailService.sendEmail(tipo, prenotazioneDTO);
-                }catch (Exception e){
-                    redirectAttributes.addFlashAttribute("successMessage",
-                            "Errore durante l'invio della mail per la prenotazione, verrà contattata " +
-                                    "telefonicamente");
-                }
-
-                if (tipo == null) {
-                    return "Prenotazione/Prenotazione";
-                } else {
-                    return "redirect:/nuova/Prenotazione?tipo=" + tipo;
-                }
-            }
+            prenotazioneService.creaNuovaPrenotazione(prenotazioneDTO, tipo);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Prenotazione effettuata, verrete ricontattati al più presto");
+        } catch (MailException ex) {
+            // Se c'è un errore nell'invio mail
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Prenotazione effettuata, verrete ricontattati al più presto");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Errore durante il tentativo di Prenotazione");
-
-            if (tipo == null) {
-                return "Prenotazione/Prenotazione";
-            } else {
-                return "redirect:/nuova/Prenotazione?tipo=" + tipo;
-            }
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Errore durante il tentativo di prenotazione");
+            return tipo == null ? "Prenotazione/Prenotazione" : "redirect:/nuova/Prenotazione?tipo=" + tipo;
         }
 
-        // Fallback generale se prenotazioneService non ritorna true ma senza eccezioni
-        redirectAttributes.addFlashAttribute("errorMessage", "Errore durante il tentativo di Prenotazione");
-
-        if (tipo == null) {
-            return "Prenotazione/Prenotazione";
-        } else {
-            return "redirect:/nuova/Prenotazione?tipo=" + tipo;
-        }
+        // Se siamo arrivati qui senza eccezioni bloccanti
+        return tipo == null ? "Prenotazione/Prenotazione" : "redirect:/nuova/Prenotazione?tipo=" + tipo;
     }
 }

@@ -7,6 +7,7 @@ import com.Risk.Repository.ClienteRepository;
 import com.Risk.Repository.PrenotazioneRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,17 +16,20 @@ import java.time.LocalDate;
 public class PrenotazioneService {
 
     private PrenotazioneRepository prenotazioneRepository;
+    private EmailService emailService;
 
     private ClienteRepository clienteRepository;
 
     @Autowired
-    public PrenotazioneService(PrenotazioneRepository prenotazioneRepository, ClienteRepository clienteRepository){
+    public PrenotazioneService(PrenotazioneRepository prenotazioneRepository, ClienteRepository clienteRepository,
+                               EmailService emailService){
         this.prenotazioneRepository = prenotazioneRepository;
         this.clienteRepository = clienteRepository;
+        this.emailService = emailService;
     }
 
     @Transactional
-    public boolean creaNuovaPrenotazione(PrenotazioneDTO prenotazioneDTO){
+    public boolean creaNuovaPrenotazione(PrenotazioneDTO prenotazioneDTO, String tipologiaPrenotazione){
         if (prenotazioneDTO == null){
             throw new IllegalArgumentException();
         }
@@ -44,6 +48,15 @@ public class PrenotazioneService {
             prenotazione.setNote(prenotazioneDTO.getNote());
             prenotazione.setCliente(cliente);
             prenotazioneRepository.save(prenotazione);
+
+            //Tento l'invio della mail
+            try {
+                emailService.sendEmail(tipologiaPrenotazione, prenotazioneDTO);
+                prenotazione.setMailInviata(true);
+            }catch (MailException ex){
+                prenotazione.setMailInviata(false);
+                throw new Exception("Errore durante il tentativo di invio della mail");
+            }
             return isPrenotato = true;
         }catch (Exception e){
             return isPrenotato;

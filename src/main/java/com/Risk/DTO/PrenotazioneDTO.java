@@ -2,6 +2,8 @@ package com.Risk.DTO;
 
 import jakarta.validation.constraints.*;
 
+import java.time.LocalDate;
+
 public class PrenotazioneDTO {
 
     @NotBlank(message = "Il campo non può essere vuoto")
@@ -24,6 +26,26 @@ public class PrenotazioneDTO {
     private String Note;
 
     private String Tipo;
+
+    private boolean IsMailInviata;
+
+    private LocalDate DataRichiesta;
+
+    public LocalDate getDataRichiesta() {
+        return DataRichiesta;
+    }
+
+    public void setDataRichiesta(LocalDate dataRichiesta) {
+        DataRichiesta = dataRichiesta;
+    }
+
+    public boolean isMailInviata() {
+        return IsMailInviata;
+    }
+
+    public void setMailInviata(boolean mailInviata) {
+        IsMailInviata = mailInviata;
+    }
 
     public String getTipo() {
         return Tipo;
