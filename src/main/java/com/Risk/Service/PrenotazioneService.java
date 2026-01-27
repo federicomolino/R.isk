@@ -75,6 +75,7 @@ public class PrenotazioneService {
         }
 
         PrenotazioneDTO prenotazioneDTO = new PrenotazioneDTO();
+        prenotazioneDTO.setIdPrenotazione(idPrenotazione);
         prenotazioneDTO.setNome(c.getNome().toUpperCase());
         prenotazioneDTO.setCognome(c.getCognome().toUpperCase());
         prenotazioneDTO.setEmail(c.getEmail());
@@ -84,5 +85,16 @@ public class PrenotazioneService {
         prenotazioneDTO.setMailInviata(p.get().isMailInviata());
         prenotazioneDTO.setDataRichiesta(p.get().getDataAppuntamento());
         return prenotazioneDTO;
+    }
+
+    public void letturaAppuntamento(int idPrenotazione){
+        Optional<Prenotazione> p = prenotazioneRepository.findById(idPrenotazione);
+        if (p.isPresent()){
+            Prenotazione prenotazione = p.get();
+            prenotazione.setMailInviata(true);
+            prenotazioneRepository.save(prenotazione);
+        }else {
+            throw new RuntimeException("Prenotazione con id: " + idPrenotazione + " non trovata");
+        }
     }
 }

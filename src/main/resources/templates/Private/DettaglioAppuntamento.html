@@ -33,7 +33,8 @@
         <div class="d-flex justify-content-center mb-1">
           <h5 class="card-title mb-0">Dettaglio Appuntamento</h5>
         </div>
-        <form method="post" th:object="${formDettaglioAppuntamento}" th:action="@{/Accedi/Private/DettaglioAppuntamento}">
+        <form method="post" th:object="${formDettaglioAppuntamento}" th:action="@{/Accedi/Private/Appuntamento}">
+          <input type="hidden" th:field="*{idPrenotazione}" />
           <div class="row mb-3">
             <div class="d-flex justify-content-end">
               <div><small>Richiesta:&nbsp;</small></div>
@@ -70,6 +71,14 @@
             <div class="col-4 fw-bold text-end">Note:</div>
             <div class="col-8"
                  th:text="${#strings.isEmpty(formDettaglioAppuntamento.Note) ? 'Nessuna nota presente' : formDettaglioAppuntamento.Note}">
+            </div>
+          </div>
+
+          <div th:unless="${formDettaglioAppuntamento.mailInviata}" class="row">
+            <div class="text-end">
+              <button type="submit" class="btn btn-success btn-sm">
+                <i class="bi bi-eye"></i>&nbsp;Letta
+              </button>
             </div>
           </div>
 

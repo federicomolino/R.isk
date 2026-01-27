@@ -33,6 +33,16 @@ public class PrenotazioneDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate DataRichiesta;
 
+    private int idPrenotazione;
+
+    public int getIdPrenotazione() {
+        return idPrenotazione;
+    }
+
+    public void setIdPrenotazione(int idPrenotazione) {
+        this.idPrenotazione = idPrenotazione;
+    }
+
     public LocalDate getDataRichiesta() {
         return DataRichiesta;
     }

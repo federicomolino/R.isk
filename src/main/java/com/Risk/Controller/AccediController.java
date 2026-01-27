@@ -1,5 +1,6 @@
 package com.Risk.Controller;
 
+import com.Risk.DTO.PrenotazioneDTO;
 import com.Risk.DTO.UtenteDto;
 import com.Risk.Repository.PrenotazioneRepository;
 import com.Risk.Repository.UtenteRepository;
@@ -9,10 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
@@ -70,6 +68,26 @@ public class AccediController {
             redirectAttributes.addFlashAttribute("errorMessage", "Errore durante " +
                     "il recupero dell'Appuntamento");
             return "redirect:Accedi/Private/VerificaAppuntamenti";
+        }
+    }
+
+    @PostMapping("/Private/Appuntamento")
+    public String appuntamentoLetto(@ModelAttribute("formDettaglioAppuntamento") PrenotazioneDTO prenotazioneDTO,
+                                    RedirectAttributes redirectAttributes){
+        if (prenotazioneDTO.getIdPrenotazione() == 0){
+            redirectAttributes.addFlashAttribute("errorMessage", "Errore durante la lettura della" +
+                    "mail");
+            return "redirect:/Accedi/Private/Appuntamento/" + prenotazioneDTO.getIdPrenotazione();
+        }
+        try {
+            prenotazioneService.letturaAppuntamento(prenotazioneDTO.getIdPrenotazione());
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Appuntamento segnato come letto");
+            return "redirect:/Accedi/Private/VerificaAppuntamenti";
+        }catch (Exception ex){
+            redirectAttributes.addFlashAttribute("errorMessage", "Errore durante la lettura della" +
+                    "mail");
+            return "redirect:/Accedi/Private/Appuntamento/" + prenotazioneDTO.getIdPrenotazione();
         }
     }
 }
