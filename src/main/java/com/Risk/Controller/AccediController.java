@@ -4,13 +4,16 @@ import com.Risk.DTO.UtenteDto;
 import com.Risk.Repository.PrenotazioneRepository;
 import com.Risk.Repository.UtenteRepository;
 import com.Risk.Service.PasswordUtil;
+import com.Risk.Service.PrenotazioneService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 
@@ -21,13 +24,15 @@ public class AccediController {
     private UtenteRepository utenteRepository;
     private PasswordUtil passwordUtil;
     private PrenotazioneRepository prenotazioneRepository;
+    private PrenotazioneService prenotazioneService;
 
     @Autowired
     public AccediController(UtenteRepository utenteRepository, PasswordUtil passwordUtil,
-                            PrenotazioneRepository prenotazioneRepository){
+                            PrenotazioneRepository prenotazioneRepository, PrenotazioneService prenotazioneService){
         this.utenteRepository = utenteRepository;
         this.passwordUtil = passwordUtil;
         this.prenotazioneRepository = prenotazioneRepository;
+        this.prenotazioneService = prenotazioneService;
     }
 
     @GetMapping()
@@ -52,5 +57,19 @@ public class AccediController {
         }
         model.addAttribute("prenotazioni", prenotazioneRepository.findAllOrderByDataAppuntamento());
         return "Private/VerificaAppuntamenti";
+    }
+
+    @GetMapping("/Private/Appuntamento/{idPrenotazione}")
+    public String getDettaglioAppuntamento(@PathVariable("idPrenotazione") int idPrenotazione, Model model,
+                                           RedirectAttributes redirectAttributes){
+        try {
+            model.addAttribute("formDettaglioAppuntamento",
+                    prenotazioneService.RecuperaAppuntamento(idPrenotazione));
+            return "Private/DettaglioAppuntamento";
+        }catch (Exception e){
+            redirectAttributes.addFlashAttribute("errorMessage", "Errore durante " +
+                    "il recupero dell'Appuntamento");
+            return "redirect:Accedi/Private/VerificaAppuntamenti";
+        }
     }
 }

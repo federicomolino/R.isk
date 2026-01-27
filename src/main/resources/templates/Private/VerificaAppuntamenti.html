@@ -32,10 +32,10 @@
       </div>
     </div>
   </div>
-
+  <h3>Appuntamenti Presenti</h3>
   <div class="list-group">
     <a th:each="p : ${prenotazioni}"
-       th:href="@{'/prenotazione/' + ${p.idPrenotazione}}"
+       th:href="@{'/Accedi/Private/Appuntamento/' + ${p.idPrenotazione}}"
        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-1">
 
       <div class="d-flex align-items-center">

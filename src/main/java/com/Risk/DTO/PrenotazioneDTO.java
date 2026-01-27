@@ -1,6 +1,7 @@
 package com.Risk.DTO;
 
 import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -29,6 +30,7 @@ public class PrenotazioneDTO {
 
     private boolean IsMailInviata;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate DataRichiesta;
 
     public LocalDate getDataRichiesta() {

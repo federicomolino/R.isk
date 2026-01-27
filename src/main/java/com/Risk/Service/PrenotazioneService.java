@@ -11,6 +11,7 @@ import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class PrenotazioneService {
@@ -61,5 +62,27 @@ public class PrenotazioneService {
         }catch (Exception e){
             return isPrenotato;
         }
+    }
+
+    public PrenotazioneDTO RecuperaAppuntamento(int idPrenotazione){
+        Optional<Prenotazione> p = prenotazioneRepository.findById(idPrenotazione);
+        if (p.isEmpty()){
+            return null;
+        }
+        Cliente c = p.get().getCliente();
+        if(c == null){
+            return null;
+        }
+
+        PrenotazioneDTO prenotazioneDTO = new PrenotazioneDTO();
+        prenotazioneDTO.setNome(c.getNome().toUpperCase());
+        prenotazioneDTO.setCognome(c.getCognome().toUpperCase());
+        prenotazioneDTO.setEmail(c.getEmail());
+        prenotazioneDTO.setTelefono(String.valueOf(c.getTelefono()));
+        prenotazioneDTO.setTipologiaPrenotazione(p.get().getTipologiaPrenotazione());
+        prenotazioneDTO.setNote(p.get().getNote());
+        prenotazioneDTO.setMailInviata(p.get().isMailInviata());
+        prenotazioneDTO.setDataRichiesta(p.get().getDataAppuntamento());
+        return prenotazioneDTO;
     }
 }
