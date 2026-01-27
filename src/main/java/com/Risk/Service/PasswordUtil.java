@@ -5,7 +5,6 @@ import com.Risk.Repository.UtenteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +14,13 @@ import java.util.Optional;
 public class PasswordUtil {
 
     private static final Logger log = LoggerFactory.getLogger(PasswordUtil.class);
-    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
     private UtenteRepository utenteRepository;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    public PasswordUtil(UtenteRepository utenteRepository){
+    public PasswordUtil(UtenteRepository utenteRepository, PasswordEncoder encoder){
         this.utenteRepository = utenteRepository;
+        this.encoder = encoder;
     }
 
     public boolean verificaPassword(String username, String password){
