@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,14 +15,18 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationProvider provider) throws Exception {
         http
-                // CSRF con cookie (per SPA o Thymeleaf)
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                )
+                // CSRF con sessione (HttpSessionCsrfTokenRepository)
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
                 )
                 // Autorizzazioni
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/Accedi").permitAll()               // login page GET/POST
-                        .requestMatchers("/Accedi/Private/**").authenticated() // area protetta
+                        // Area protetta
+                        .requestMatchers("/Accedi/Private/**").authenticated()
+                        // Tutto il resto pubblico
                         .anyRequest().permitAll()
                 )
                 // Provider custom per password
@@ -31,7 +36,6 @@ public class SecurityConfiguration {
                         .loginPage("/Accedi")                       // pagina login GET
                         .loginProcessingUrl("/Accedi")             // Spring intercetta POST
                         .failureHandler((request, response, exception) -> {
-                            // Salva il messaggio nella sessione
                             request.getSession().setAttribute("errorMessage", "Username o password non validi");
                             response.sendRedirect("/Accedi");      // redirect GET login
                         })
@@ -45,6 +49,7 @@ public class SecurityConfiguration {
                 );
 
         return http.build();
+
     }
 
     @Bean
